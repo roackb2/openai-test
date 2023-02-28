@@ -15,20 +15,17 @@ const saveResponse = (response, fileName) => {
   fs.writeFileSync(outputPath, buff)
 }
 
-const createImage = async (prompt) => {
+const createImage = async (prompt, options) => {
   const response = await openai.createImage({
     prompt,
-    n: 3,
+    n: options.n || 3,
     size: "1024x1024",
   });
   console.log(response.data.data.map(i => i.url))
 }
 
-const editImage = async (fileName) => {
+const imageVariations = async (fileName, options) => {
   const imgInputPath = path.join(INPUT_DIR, fileName)
-  console.log(imgInputPath)
-  const file = fs.readFileSync(imgInputPath)
-  console.log(`file: ${file.length}`)
   response = await openai.createImageVariation(
     fs.createReadStream(imgInputPath),
     1,
@@ -41,5 +38,5 @@ const editImage = async (fileName) => {
 
 module.exports = {
   createImage,
-  editImage
+  imageVariations
 }

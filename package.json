@@ -1,15 +1,19 @@
 {
-  "name": "image-edit",
+  "name": "openai-test",
   "version": "1.0.0",
-  "description": "",
+  "description": "Testing API integration of OpenAI",
   "main": "index.js",
+  "bin": {
+    "openai-cli": "src/index.js"
+  },
   "scripts": {
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Jay / Fienna Liang (roackb2@gmail.com)",
   "license": "ISC",
   "dependencies": {
+    "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "openai": "^3.1.0"
   }
