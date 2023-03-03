@@ -31,6 +31,19 @@ class Assistant {
 
   async processUserMsg() {
     const userMsg = await readLineAsync("You: ")
+    if (userMsg === '.editor') {
+      let input = ''
+      let editorMsg = ''
+      print('type .exit to exit editor')
+      while (true) {
+        input = await readLineAsync('')
+        if (input === '.exit') break
+        editorMsg += input
+      }
+      print('exit editor mode')
+      await this.processMessage("user", editorMsg)
+      return
+    }
     print('\n')
     await this.processMessage("user", userMsg)
   }
@@ -60,6 +73,7 @@ class Assistant {
 
   async chat() {
     await this.initChat()
+    print('type .editor to enter editor mode\n')
     try {
       while (true) {
         await this.processUserMsg()
