@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 const { program } = require('commander')
+const { chat } = require('./lib/chat')
 const { textCompletion } = require('./lib/text')
 const { createImage, imageVariations } = require('./lib/image')
 
@@ -25,5 +26,11 @@ program
   .description('Image variations')
   .argument('<fileName>', 'File name of the image to generate variations in the input folder')
   .action(imageVariations)
+
+program
+  .command('chat')
+  .version('0.1.0')
+  .description('Start chatting with your personal assistant')
+  .action(chat)
 
 program.parse()
