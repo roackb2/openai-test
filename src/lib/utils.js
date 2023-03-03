@@ -20,13 +20,17 @@ const handleErr = (error) => {
   }
 }
 
+
 const debug = (msg) => {
   if (process.env.DEBUG !== 'true') return
   console.debug(msg)
 }
 
+const print = (msg) => console.log(msg)
+
 module.exports = {
   readLineAsync,
   handleErr,
-  debug
+  debug,
+  print
 }

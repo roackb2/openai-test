@@ -30,6 +30,7 @@ program
 program
   .command('chat')
   .version('0.1.0')
+  .option('-k, --key <key>', 'The key to identify a conversation in persistent storage. Conversation won\'t be stored if this is set to "none"', 'none')
   .description('Start chatting with your personal assistant')
   .action(chat)
 
