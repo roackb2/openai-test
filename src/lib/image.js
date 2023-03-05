@@ -1,9 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 const { openai } = require('./core')
-
-const INPUT_DIR =  path.join(__dirname, '../../input')
-const OUTPUT_DIR =  path.join(__dirname, '../../output')
+const {
+  INPUT_DIR,
+  OUTPUT_DIR
+} = require('./utils')
 
 const saveResponse = (response, fileName) => {
   console.log(response.data)

@@ -1,5 +1,6 @@
 const { openai } = require('./core')
 const {
+  readInput,
   readLineAsync,
   handleErr,
   debug,
@@ -16,6 +17,7 @@ class Assistant {
     this.messages = []
     this.key = options.key
     this.persistent = this.key !== 'none'
+    this.input = options.input
   }
 
   async processMessage(role, content) {
@@ -71,34 +73,61 @@ class Assistant {
     }
   }
 
-  async chat() {
-    await this.initChat()
-    print('type .editor to enter editor mode\n')
+  async getAssistantResponse() {
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: this.prepareMessages()
+    })
+    debug(response.data.choices)
+
+    const assistantMsg = response.data.choices[0].message.content
+    return assistantMsg
+  }
+
+  async chatLoop() {
     try {
       while (true) {
         await this.processUserMsg()
-
-        const response = await openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
-          messages: this.prepareMessages()
-        })
-        debug(response.data.choices)
-
-        const assistantMsg = response.data.choices[0].message.content
+        const assistantMsg = await this.getAssistantResponse()
         await this.processAssistantMsg(assistantMsg)
       }
     } catch (err) {
       handleErr(err)
     }
   }
+
+  async chat() {
+    await this.initChat()
+    print('type .editor to enter editor mode\n')
+    await this.chatLoop()
+  }
+
+  async scriptedChat() {
+    await this.initChat()
+    const content = readInput(this.input)
+    await this.processMessage('user', content)
+    const assistantMsg = await this.getAssistantResponse()
+    await this.processAssistantMsg(assistantMsg)
+    await this.chatLoop()
+  }
+}
+
+const initAssistant = options => {
+  const instruction = `You are a considerate personal assistant to your owner named ${process.env.USERNAME}. ` + (process.env.INSTRUCTION || '')
+  return new Assistant(options, instruction)
 }
 
 const chat = (options) => {
-  const instruction = `You are a considerate personal assistant to your owner named ${process.env.USERNAME}. ` + (process.env.INSTRUCTION || '')
-  const assistant = new Assistant(options, instruction)
+  const assistant = initAssistant(options)
   assistant.chat()
 }
 
+const scriptedChat = (options) => {
+  const assistant = initAssistant(options)
+  assistant.scriptedChat()
+}
+
 module.exports = {
-  chat
+  chat,
+  scriptedChat
 }

@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 const { program } = require('commander')
-const { chat } = require('./lib/chat')
+const { chat, scriptedChat } = require('./lib/chat')
 const { textCompletion } = require('./lib/text')
 const { createImage, imageVariations } = require('./lib/image')
 
@@ -33,5 +33,13 @@ program
   .option('-k, --key <key>', 'The key to identify a conversation in persistent storage. Conversation won\'t be stored if this is set to "none"', 'none')
   .description('Start chatting with your personal assistant')
   .action(chat)
+
+program
+  .command('scripted-chat')
+  .version('0.1.0')
+  .option('-i, --input <input>', 'Name of the file in the input folder for scripted content')
+  .option('-k, --key <key>', 'The key to identify a conversation in persistent storage. Conversation won\'t be stored if this is set to "none"', 'none')
+  .description('Start chatting with your personal assistant')
+  .action(scriptedChat)
 
 program.parse()
